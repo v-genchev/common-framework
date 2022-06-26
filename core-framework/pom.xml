@@ -6,7 +6,7 @@
 
     <parent>
         <artifactId>core-framework-parent</artifactId>
-        <groupId>aiopsgroup.automation</groupId>
+        <groupId>leanplum.automation</groupId>
         <version>1.0-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
