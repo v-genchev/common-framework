@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -20,8 +21,8 @@ public abstract class Component {
     public DynamicDriverManager driverManager;
     private WebDriver driver;
 
-    private final int waitIntervalElement = 5;
-    private final int waitIntervalPage = 10;
+    private final Duration waitIntervalElement = Duration.ofSeconds(5);
+    private final Duration waitIntervalPage = Duration.ofSeconds(10);
 
     public Component(DynamicDriverManager driverManager) {
         this.driverManager = driverManager;
@@ -37,7 +38,7 @@ public abstract class Component {
         waitForElement(element, waitIntervalPage);
     }
 
-    private void waitForElement(WebElement element, int waitIntervalTime) {
+    private void waitForElement(WebElement element, Duration waitIntervalTime) {
         WebDriverWait wait = new WebDriverWait(driver, waitIntervalTime);
         wait.until(ExpectedConditions.visibilityOf(element));
     }

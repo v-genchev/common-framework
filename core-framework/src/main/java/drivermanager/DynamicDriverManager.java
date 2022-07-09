@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.Set;
 
 public class  DynamicDriverManager implements DriverManager {
@@ -52,7 +53,7 @@ public class  DynamicDriverManager implements DriverManager {
     }
 
     public void switchToNewWindow(){
-        WebDriverWait wait = new WebDriverWait(getDriver(), waitIntervalNewWindow);
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(waitIntervalNewWindow));
         wait.until(ExpectedConditions.numberOfWindowsToBe(windowHandles.size() + 1));
         windowHandles = driverManager.getWindowHandles();
         for (String windowHandle : windowHandles){
