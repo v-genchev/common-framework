@@ -1,10 +1,9 @@
 package pageobjects;
 
 import drivermanager.DynamicDriverManager;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import helpers.CustomExpectedConditions;
+import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -14,13 +13,15 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public abstract class Component {
 
+    public static Logger logger = Logger.getLogger(Component.class.getName());
     public DynamicDriverManager driverManager;
     private WebDriver driver;
-
     private final Duration waitIntervalElement = Duration.ofSeconds(5);
     private final Duration waitIntervalPage = Duration.ofSeconds(10);
 
@@ -48,9 +49,24 @@ public abstract class Component {
         wait.until(ExpectedConditions.visibilityOfAllElements(elements));
     }
 
-    public void selectByVisibleText(WebElement selectElement, String text) {
-        Select select = new Select(selectElement);
-        select.selectByVisibleText(text);
+    public void waitForElementToDissapear(WebElement element){
+        WebDriverWait wait = new WebDriverWait(driver, waitIntervalElement);
+        wait.until(ExpectedConditions.invisibilityOf(element));
+    }
+
+    public void waitForElementToBeClickable(WebElement element){
+        WebDriverWait wait = new WebDriverWait(driver, waitIntervalElement);
+        wait.until(ExpectedConditions.elementToBeClickable(element));
+    }
+
+    public void waitForElementTextToBe(WebElement element, String text){
+        WebDriverWait wait = new WebDriverWait(driver, waitIntervalElement);
+        wait.until(CustomExpectedConditions.elementTextToBe(element, text));
+    }
+
+    public void waitForElementValueToBe(WebElement element, String text){
+        WebDriverWait wait = new WebDriverWait(driver, waitIntervalElement);
+        wait.until(ExpectedConditions.attributeToBe(element, "value", text));
     }
 
     public List<String> getElementsText(List<WebElement> elements) {
@@ -78,9 +94,54 @@ public abstract class Component {
         }
     }
 
+    public WebElement getElementByPartialText(List<WebElement> elements, String text) {
+
+        for(WebElement element : elements){
+            if(StringUtils.containsIgnoreCase(element.getText(), text)){
+                return element;
+            }
+        }
+        throw new IllegalArgumentException(String.format("Cannot find element containing text %s in the list %s", text, text));
+    }
+
+    public String getElementNodeText(WebElement element){
+        String elementText = element.getText();
+        List<WebElement> children = element.findElements(By.xpath("./*"));
+        for (WebElement child: children){
+            elementText = elementText.replaceFirst(child.getText(),"");
+        }
+        return elementText.trim();
+    }
+
+    public String getElementTextContent(WebElement element){
+        return element.getAttribute("textContent");
+    }
+
     public void typeWithClear(WebElement element, String text) {
         element.clear();
+        if(!element.getText().equals("") || !element.getAttribute("value").equals("")){
+            element.sendKeys(Keys.chord(Keys.CONTROL,"a", Keys.DELETE));
+        }
+
         element.sendKeys(text);
+    }
+
+    public void removeFocus(WebElement element){
+        element.sendKeys(Keys.TAB);
+    }
+
+    public void selectByVisibleText(WebElement selectElement, String text) {
+        Select select = new Select(selectElement);
+        select.selectByVisibleText(text);
+    }
+
+    public void checkboxAction(WebElement checkbox, boolean select){
+        boolean isSelected = checkbox.isSelected();
+        if (select != isSelected){
+            checkbox.click();
+        }
+        WebDriverWait wait = new WebDriverWait(driver, waitIntervalElement);
+        wait.until(ExpectedConditions.elementSelectionStateToBe(checkbox, select));
     }
 
     public void scrollToView(WebElement element){
@@ -94,25 +155,6 @@ public abstract class Component {
     public void hoverOverElement(WebElement element) {
         Actions builder = new Actions(driver);
         builder.moveToElement(element).perform();
-    }
-
-    public void waitForElementToDissapear(WebElement element){
-        WebDriverWait wait = new WebDriverWait(driver, waitIntervalElement);
-        wait.until(ExpectedConditions.invisibilityOf(element));
-    }
-
-    public void waitForElementToBeClickable(WebElement element){
-        WebDriverWait wait = new WebDriverWait(driver, waitIntervalElement);
-        wait.until(ExpectedConditions.elementToBeClickable(element));
-    }
-
-    public String getElementNodeText(WebElement element){
-        String elementText = element.getText();
-        List<WebElement> children = element.findElements(By.xpath("./*"));
-        for (WebElement child: children){
-            elementText = elementText.replaceFirst(child.getText(),"");
-        }
-        return elementText.trim();
     }
 
 

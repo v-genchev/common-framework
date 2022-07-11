@@ -23,8 +23,12 @@ public class CommonSteps {
     }
 
     @And("^I verify current url is (.*)$")
-    public void verifyNewTab(String url) {
+    public void verifyCurrentUrl(String url) {
         Assert.assertEquals(driverManger.getDriver().getCurrentUrl(), url, "Current window url is not as expected");
+    }
+    @And("^I verify page title is (.*)$")
+    public void verifyPageTitle(String title) {
+        Assert.assertEquals(driverManger.getDriver().getTitle(), title, "Current page title not as expected");
     }
 
 }

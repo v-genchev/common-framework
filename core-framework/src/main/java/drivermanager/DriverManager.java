@@ -1,6 +1,7 @@
 package drivermanager;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 import java.util.Set;
 
@@ -32,6 +33,16 @@ public interface DriverManager {
     default void switchToWindow(String window){
         getDriver().switchTo().window(window);
     }
+
+    /**
+     * Switches to the desired  frame
+     */
+    default void switchToFrame(WebElement frame){getDriver().switchTo().frame(frame);}
+
+    /**
+     * Switches to the default content
+     */
+    default void switchToDefaultContent(){getDriver().switchTo().defaultContent();}
 
     /**
      * @return Set<String> of all window handles
