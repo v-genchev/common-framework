@@ -77,6 +77,14 @@ public abstract class Component {
         return elementsText;
     }
 
+    public List<String> getElementsValues(List<WebElement> elements) {
+        List<String> elementsText = new ArrayList<>();
+        for (WebElement element : elements) {
+            elementsText.add(element.getAttribute("value"));
+        }
+        return elementsText;
+    }
+
     public List<String> getElementsNodeText(List<WebElement> elements) {
         List<String> elementsText = new ArrayList<>();
         for (WebElement element : elements) {
@@ -120,7 +128,7 @@ public abstract class Component {
     public void typeWithClear(WebElement element, String text) {
         element.clear();
         if(!element.getText().equals("") || !element.getAttribute("value").equals("")){
-            element.sendKeys(Keys.chord(Keys.CONTROL,"a", Keys.DELETE));
+            element.sendKeys(Keys.chord(Keys.CONTROL,"a", Keys.BACK_SPACE));
         }
 
         element.sendKeys(text);
@@ -150,6 +158,10 @@ public abstract class Component {
 
     public void scrollToView(WebElement element, Boolean allignToTop) {
         ((JavascriptExecutor) driver).executeScript(String.format("arguments[0].scrollIntoView(%s);", allignToTop), element);
+    }
+
+    public void actionsClick(WebElement element, int pauseFor){
+        new Actions(driver).moveToElement(element).pause(pauseFor).click().perform();
     }
 
     public void hoverOverElement(WebElement element) {
