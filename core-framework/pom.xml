@@ -58,12 +58,12 @@
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>gherkin</artifactId>
-            <version>5.0.0</version>
+            <version>5.2.0</version>
         </dependency>
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-testng</artifactId>
-            <version>7.1.0</version>
+            <version>5.4.0</version>
         </dependency>
         <dependency>
             <groupId>io.cucumber</groupId>
