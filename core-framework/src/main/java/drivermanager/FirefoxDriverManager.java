@@ -12,7 +12,7 @@ public class FirefoxDriverManager implements DriverManager {
     @Override
     public void createDriver() {
         FirefoxOptions firefoxOptions = new FirefoxOptions();
-        System.setProperty("webdriver.gecko.driver", PropertiesCache.getInstance().getProperty("gecko.driver.dir"));
+        System.setProperty("webdriver.gecko.driver", PropertiesCache.getInstance().getProperty("gecko.driver.path"));
         driver = new FirefoxDriver(firefoxOptions);
     }
 

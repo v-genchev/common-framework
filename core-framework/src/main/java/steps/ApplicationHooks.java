@@ -28,8 +28,7 @@ public class ApplicationHooks {
                 FileUtils.copyFile(screenshot, new File(screenshot_path));
             } catch (Exception ignore) {
             }
-
-            driverManger.quitDriver();
         }
+        driverManger.quitDriver();
     }
 }
