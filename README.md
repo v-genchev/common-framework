@@ -11,7 +11,14 @@ Framework is intended to be used as a submodule and provides common functionalit
 3. Currently, the project supports chromedriver and geckodriver
    - Specify the path to the driver in you projects config.properties - chrome.driver.path or gecko.driver.path
    - Support for other browsers can be added on request, one can contribute by just implementing the DriverManager interface
-
+4. You could also execute your test cases on a Docker container, you would need to update your config.properties accordingly.
+   ```properties
+      env.execution = remote
+      browser = chrome/firefox
+      headless = true
+      remote.driver.url = depends on set up
+   ```
+   
 ## Contributing
 
 Only common parts should be added to this repository.

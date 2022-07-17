@@ -1,12 +1,20 @@
 package drivermanager;
 
 import helpers.PropertiesCache;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.Duration;
 import java.util.Set;
+
 
 public class  DynamicDriverManager implements DriverManager {
 
@@ -15,6 +23,7 @@ public class  DynamicDriverManager implements DriverManager {
     private Set<String> windowHandles;
     private final int waitIntervalNewWindow = 5;
 
+    private static final Logger logger = LogManager.getLogger(DriverManager.class);
     public DynamicDriverManager() {
         String browserType = PropertiesCache.getInstance().getProperty("browser");
         switch (browserType.toLowerCase()) {
@@ -28,10 +37,22 @@ public class  DynamicDriverManager implements DriverManager {
                 throw new RuntimeException("Unsupported browser");
         }
     }
-
     @Override
     public void createDriver() {
-        driverManager.createDriver();
+        String executionType = PropertiesCache.getInstance().getProperty("env.execution");
+        if (executionType.equals("local")){
+            driverManager.createDriver();
+        }
+        else{
+            try{
+                URL remoteUrl = new URL(PropertiesCache.getInstance().getProperty("remote.driver.url"));
+                RemoteWebDriver remoteWebDriver = new RemoteWebDriver(remoteUrl, getOptions());
+                driverManager.setDriver(remoteWebDriver);
+            }
+            catch (MalformedURLException e){
+                logger.error("Url provided in config.properties is malformed " + e);
+            }
+        }
         currentWindow = getCurrentWindowHandle();
         windowHandles = getWindowHandles();
     }
@@ -39,6 +60,16 @@ public class  DynamicDriverManager implements DriverManager {
     @Override
     public WebDriver getDriver() {
         return driverManager.getDriver();
+    }
+
+    @Override
+    public Capabilities getOptions() {
+        return driverManager.getOptions();
+    }
+
+    @Override
+    public void setDriver(WebDriver driver) {
+        driverManager.setDriver(driver);
     }
 
     @Override

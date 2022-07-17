@@ -1,5 +1,6 @@
 package drivermanager;
 
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -19,6 +20,16 @@ public interface DriverManager {
      * @return the created WebDriver instance
      */
     WebDriver getDriver();
+
+    /**
+     * @return the browser capabilities set
+     */
+    Capabilities getOptions();
+
+    /**
+     * Sets the driver
+     */
+    void setDriver(WebDriver driver);
 
     /**
      * @return the current Window Handle
